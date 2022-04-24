@@ -3,6 +3,7 @@ import cv2 as cv2
 import numpy as np
 
 app = Flask(__name__)
+# git test changes 
 
 @app.route('/', methods=["POST", "GET"])
 def serwer_run():
