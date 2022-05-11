@@ -25,13 +25,22 @@ def send_image():
 @app.route('/download_from_dvc', methods = ["POST", "GET"])
 def download_from_dvc():
     if request.method == "POST":
-        with dvc.api.open('\serwer\res\data\Images.zip.dvc', repo='https://https://github.com/Ich-czworo/Mobile-Paragon/tree/dvc') as fd:
+        with dvc.api.open('serwer\\res\\data\\Images.zip', repo='https://https://github.com/Ich-czworo/Mobile-Paragon') as fd:
             for i in fd:
                 print(type(i))
         return "Files has been downloaded successfully"
 
     else:
         return "Wrong request method."
+@app.route('/d_from_dvc', methods = ["POST", "GET"])
+def dwn():
+    if request.method == "POST":
+        resource_url = dvc.api.get_url(
+            'serwer\\res\\data\\Images.zip',
+            repo='https://github.com/Ich-czworo/Mobile-Paragon')
+        return resource_url
+    else:
+        return "bad request method"
 
 if __name__ == '__main__':
     app.run(debug=True)
