@@ -22,5 +22,16 @@ def send_image():
     else:
         return "Image has not been send correctly"
 
+@app.route('/download_from_dvc', methods = ["POST", "GET"])
+def download_from_dvc():
+    if request.method == "POST":
+        with dvc.api.open('\serwer\res\data\Images.zip.dvc', repo='https://https://github.com/Ich-czworo/Mobile-Paragon/tree/dvc') as fd:
+            for i in fd:
+                print(type(i))
+        return "Files has been downloaded successfully"
+
+    else:
+        return "Wrong request method."
+
 if __name__ == '__main__':
     app.run(debug=True)
