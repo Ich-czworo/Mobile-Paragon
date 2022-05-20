@@ -26,9 +26,8 @@ def send_image():
 def download_from_dvc():
     if request.method == "POST":
         with dvc.api.open('serwer\\res\\data\\Images.zip', repo='https://https://github.com/Ich-czworo/Mobile-Paragon') as fd:
-            for i in fd:
-                print(type(i))
-        return "Files has been downloaded successfully"
+            pass
+        return "Files has been downloaded successfully" + str(type(fd))
 
     else:
         return "Wrong request method."
@@ -41,6 +40,16 @@ def dwn():
         return resource_url
     else:
         return "bad request method"
+
+@app.route('/dvcc', methods = ["POST", "GET"])
+def dvcc():
+    if request.method == "POST":
+        ziped_images = dvc.api.read('serwer\\res\\data\\Images.zip', repo='https://https://github.com/Ich-czworo/Mobile-Paragon')
+        print("asdasd")
+        return "Files has been downloaded successfully" + str(type(ziped_images))
+
+    else:
+        return "Wrong request method."
 
 if __name__ == '__main__':
     app.run(debug=True)
