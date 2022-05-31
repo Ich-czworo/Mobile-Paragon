@@ -7,4 +7,3 @@ def process_image(image):
     information_extracted_from_image = tesseract_read(image)
 
     articles = seperate_articles(information_extracted_from_image)
-    
