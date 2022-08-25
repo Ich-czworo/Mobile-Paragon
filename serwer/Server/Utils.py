@@ -1,8 +1,6 @@
-from Server.Server import app
 
-
-def seperate_articles(data):
-
+def separate_articles(data):
+    pocz = kon = 0
     # szukamy słów "paragon fiskalny" oraz "suma"
     for (index, word) in enumerate(data):
         if word == 'fiskalny':
@@ -15,6 +13,5 @@ def seperate_articles(data):
         print("pocz: ", pocz, "kon: ", kon)
         return data[pocz + 1:kon]
     else:
-        app.logger.info('%s Something went wrong in separating articles. Processing stopped.')
         return None
 

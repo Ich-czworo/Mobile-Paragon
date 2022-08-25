@@ -2,44 +2,48 @@ import cv2 as cv2
 from flask import Flask, request
 import numpy as np
 import base64
-
-from Server.process_image import process_image
+from Fire_Base import get_data, save_scanned_receipt, init_fb_app, get_data_between_two_dates
+from Utils import separate_articles
+from process_image import process_image
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=["POST", "GET"])
-def serwer_run():
+def server_run():
     return "Hellow world!"
 
 
-@app.route('/sendImage', methods = ["POST", "GET"])
-def send_image():
-    if request.method == "POST":
-        img_file_str = request.files["image"].read()
-        img_array = np.fromstring(img_file_str, np.uint8)
-        img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-        #cv2.imwrite("img.png", img)
-
-        return "done"
-    else:
-        return "Image has not been send correctly"
-
-@app.route('/send_string', methods = ["POST", "GET"])
-def send_string():
+@app.route('/send_receipt', methods=["POST", "GET"])
+def send_receipt():
     if request.method == "POST":
         imageString = base64.b64decode(request.form['image'])
-
-        #  convert binary data to numpy array
         nparr = np.fromstring(imageString, np.uint8)
-
-        #  let opencv decode image to correct format
         img = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR);
-        process_image(img)
-        return "Whatever"
+        text_read = process_image(img)
+
+        if text_read is not None:
+            articles = separate_articles(text_read)
+            save_scanned_receipt(request.form["user_id"], articles)
+        return "done"
 
     else:
         print("Somethings wrong")
         return "meh"
 
+
+@app.route('/get_user_data', methods=["GET"])
+def get_user_data():
+    data = get_data(request.form["user_id"])
+    return data
+
+
+@app.route('/get_user_data_between_two_dates', methods=["GET"])
+def get_user_data_between_dates():
+    data = get_data_between_two_dates(request.form["user_id"], request.form["date_lower"], request.form["date_upper"])
+    return data
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    init_fb_app()
+    app.run(debug=True, host="0.0.0.0")
