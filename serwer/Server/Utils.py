@@ -1,8 +1,6 @@
 
-def seperate_articles(data):
-    pocz = None
-    kon = None
-
+def separate_articles(data):
+    pocz = kon = 0
     # szukamy słów "paragon fiskalny" oraz "suma"
     for (index, word) in enumerate(data):
         if word == 'fiskalny':

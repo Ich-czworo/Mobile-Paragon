@@ -1,30 +1,78 @@
-
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+from datetime import datetime
 
 
-
-cred = credentials.Certificate('C:\\Users\\micha\\Firebase\\paragon-scanner-firebase-adminsdk-n0fyt-1238f8bdb5.json')
-default_app = firebase_admin.initialize_app(cred, {
-	'databaseURL':"https://paragon-scanner-default-rtdb.firebaseio.com/"
+def init_fb_app():
+	cred = credentials.Certificate(
+		'C:\\Users\\micha\\Firebase\\paragon-scanner-firebase-adminsdk-n0fyt-1238f8bdb5.json')
+	default_app = firebase_admin.initialize_app(cred, {
+		'databaseURL': "https://paragon-scanner-default-rtdb.firebaseio.com/"
 	})
 
-ref = db.reference("/key1/")
-data = 	ref.get()
-data2 = ref.child("key1").get()
-data3 = db.reference("/key1/").child("key3").get()
-data4 = ref.get()
-print("key2/: ", data)
-print("key2/.child: ", data2)
-print("data3: ", data3)
-print("data4: ", data4)
 
-ref2 = db.reference("/key1/key19")
-ref2.set(101)
+def save_scanned_receipt(user_id, scanned_receipt):
+	date = datetime.now()
+	date_str = date.strftime("%Y-%m-%d")
+	hour = date.strftime("%H:%M:%S")
+	ref = db.reference('/' + user_id).child(date_str).child(hour)
 
-ref3 = db.reference("/1/")
-print("ref3:", ref3)
-query = ref3.order_by_key().get()
+	for product, value in scanned_receipt.items():
+		ref.child(product).set(value)
 
-print("query: ", query)
+
+def get_data(user_id):
+	db_data = db.reference("/" + user_id).get()
+	return db_data
+
+
+def get_data_between_two_dates(user_id, date_lower, date_upper):
+	data = db.reference("/" + user_id).get()
+
+	output_data = {}
+	for (key, value) in data.items():
+		if is_earlier(key, date_lower) and is_later(key, date_upper):
+			print("value: ", value)
+			for (date, receipt) in value.items():
+				for (product, price) in receipt.items():
+					print("price: ", price)
+					if product in output_data.keys():
+						output_data[product] += price
+					else:
+						output_data[product] = price
+	out_debug = str(sum(output_data.values()))
+	return out_debug #output_data
+
+def is_earlier(date, date_lower):
+	date = date.split("-")
+	date_lower = date_lower.split("-")
+
+	date = [int(x) for x in date]
+	date_lower = [int(x) for x in date_lower]
+
+	answer = False
+	for i in range(3):
+		if date[i] > date_lower[i]:
+			answer = True
+			break
+
+	return answer
+
+
+def is_later(date, date_upper):
+	date = date.split("-")
+	date_upper = date_upper.split("-")
+
+	date = [int(x) for x in date]
+	date_upper = [int(x) for x in date_upper]
+
+	answer = False
+	for i in range(3):
+		if date[i] < date_upper[i]:
+			answer = True
+			break
+		elif date[i] > date_upper[i]:
+			break
+
+	return answer
