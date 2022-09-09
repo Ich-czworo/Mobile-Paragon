@@ -33,16 +33,17 @@ def get_data_between_two_dates(user_id, date_lower, date_upper):
 	output_data = {}
 	for (key, value) in data.items():
 		if is_earlier(key, date_lower) and is_later(key, date_upper):
-			print("value: ", value)
 			for (date, receipt) in value.items():
 				for (product, price) in receipt.items():
-					print("price: ", price)
 					if product in output_data.keys():
 						output_data[product] += price
 					else:
 						output_data[product] = price
-	out_debug = str(sum(output_data.values()))
-	return out_debug #output_data
+
+	output = ""
+	for (key, value) in output_data.items():
+		output += str(key) + " - " + str(value) + "\n"
+	return output
 
 def is_earlier(date, date_lower):
 	date = date.split("-")

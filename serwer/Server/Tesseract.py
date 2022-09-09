@@ -1,5 +1,5 @@
-import cv2 as cv2
 import pytesseract
+
 
 def tesseract_read(image):
     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
