@@ -18,8 +18,12 @@ def save_scanned_receipt(user_id, scanned_receipt):
 	hour = date.strftime("%H:%M:%S")
 	ref = db.reference('/' + user_id).child(date_str).child(hour)
 
-	for product, value in scanned_receipt.items():
-		ref.child(product).set(value)
+	for (index, word) in enumerate(scanned_receipt):
+		print(index + 1, " ", word)
+		ref.child(str(index)).set(word)
+
+	#for product, value in scanned_receipt.items():
+		#ref.child(product).set(value)
 
 
 def get_data(user_id):

@@ -24,6 +24,13 @@ def send_receipt():
         processed_image = process_image(image)
         text_read = read_from_image(processed_image)
 
+        '''
+        print("---------------------------------")
+        for i in text_read:
+            print(i)
+        print("---------------------------------")
+        '''
+
         if text_read is not None:
             save_scanned_receipt(request.form["user_id"], text_read)
             return "Image has been read correctly."

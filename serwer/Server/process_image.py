@@ -36,8 +36,8 @@ def process_image(image):
 
 def read_from_image(image):
     information_extracted_from_image = tesseract_read(image)
-    articles = separate_articles(information_extracted_from_image)
-    return articles
+    #articles = separate_articles(information_extracted_from_image)
+    return information_extracted_from_image #articles
 
 
 # Works bad.
